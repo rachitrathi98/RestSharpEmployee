@@ -76,5 +76,25 @@ namespace RestSharpEmployeeTest
             Console.WriteLine(response.Content);
 
         }
+        /// <summary>
+        /// TC4: Update Salary of Employee
+        /// </summary>
+        [TestMethod]
+        public void UpdateSalaryIntoJSONServer()
+        {
+            RestRequest request = new RestRequest("/employees/8", Method.PUT);
+            JObject jObject = new JObject();
+            jObject.Add("name", "Rohit");
+            jObject.Add("salary", "50000");
+            request.AddParameter("application/json", jObject, ParameterType.RequestBody);
+            IRestResponse response = restClient.Execute(request);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+            EmployeePayroll employee = JsonConvert.DeserializeObject<EmployeePayroll>(response.Content);
+            Assert.AreEqual("Rohit", employee.name);
+            Assert.AreEqual("50000", employee.salary);
+            Console.WriteLine(response.Content);
+
+        }
+
     }
 }
