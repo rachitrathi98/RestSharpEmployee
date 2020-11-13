@@ -95,6 +95,18 @@ namespace RestSharpEmployeeTest
             Console.WriteLine(response.Content);
 
         }
+        /// <summary>
+        /// TC5: Delete an Employee Data from JSON Server
+        /// </summary>
+        [TestMethod]
+        public void DeleteEmployeeDataFromJSONServer()
+        {
+            RestRequest request = new RestRequest("employees/3", Method.DELETE);
+            IRestResponse response = restClient.Execute(request);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+            Console.WriteLine(response.Content);
+
+        }
 
     }
 }
