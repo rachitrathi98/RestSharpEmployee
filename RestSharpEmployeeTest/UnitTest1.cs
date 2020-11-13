@@ -1,8 +1,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace RestSharpEmployeeTest
 {
@@ -48,11 +50,31 @@ namespace RestSharpEmployeeTest
         {
             //Creates GET request for accessing "/employees", for sending the request to the server
             RestRequest request = new RestRequest("/employees", Method.GET);
-
             //Sends the request to the server and in return gets the response which is collected by IRestResponse 
             IRestResponse response = restClient.Execute(request);
-
             return response;
+        }
+        /// <summary>
+        /// TC2: Add a new Employee data into JSON server
+        /// </summary>
+        [TestMethod]
+        public void AddaEmployeeIntoJSONServer()
+        {
+            RestRequest request = new RestRequest("/employees", Method.POST);
+            //Creating new Emp Json data for adding into server
+            JObject jObject = new JObject();
+            jObject.Add("id", "8");
+            jObject.Add("name", "Mohit");
+            jObject.Add("salary", "3000");
+            request.AddParameter("application/json", jObject, ParameterType.RequestBody);
+            IRestResponse response = restClient.Execute(request);
+             //StatusCode for Adding data is 201
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+            EmployeePayroll employees = JsonConvert.DeserializeObject<EmployeePayroll>(response.Content);
+            Assert.AreEqual("Kunal", employees.name);
+            Assert.AreEqual("20000", employees.salary);
+            Console.WriteLine(response.Content);
+
         }
     }
 }
